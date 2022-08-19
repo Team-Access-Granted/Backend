@@ -1,53 +1,53 @@
 import bucket from '../config/firebase.config'
 import { HttpException } from '../exceptions/HttpException';
 
-const uploadFile = async (file, folder) => new Promise((resolve, reject) => {
-	
-	const blob = bucket.file(`${folder}/${file.originalname}`);
-	
-	const blobWriter = blob.createWriteStream({
-		metadata: {
-			contentType: file.mimetype
-		}
-	});
+export const uploadFile = async (file, fileName) => {
+	try {
 
-	blobWriter.on('error', (error) => {
-	  console.log("error in uploading is" , error)
-		reject('Something is wrong! Unable to upload at the moment.');
-	});
+		return await ( 
+			new Promise((resolve, reject) => {
+		
+				const blob = bucket.file(fileName);
+				
+				const blobWriter = blob.createWriteStream({
+					metadata: {
+						contentType: file.mimetype
+					}
+				});
 
-	blobWriter.on('finish', async () => {
-		
-		const urls = await blob.getSignedUrl({
-			action: 'read',
-			expires: '03-09-2491'
-		})
-		
-		resolve(urls[0]);
-		
-	});
+				blobWriter.on('error', (error) => {
+					reject('Could not upload attached files.');
+				});
 
-	blobWriter.end(file.buffer);
-})
+				blobWriter.on('finish', async () => {
+					
+					const urls = await blob.getSignedUrl({
+						action: 'read',
+						expires: '03-09-2491'
+					})
+					
+					resolve(urls[0]);
+					
+				});
 
-export const uploadProfilePhoto = async (file) => {
-	try{
+				blobWriter.end(file.buffer);
+			})
+		)
 		
-		const url = await uploadFile(file,"Profile Photos")
-		return url;
-		
-	}catch(error){
-		throw new HttpException(400, "Could not upload profile photo.")
+	}catch(error) {
+		throw new HttpException(400, "Could not upload files.")
 	}
 }
 
-export const uploadResume = async (file) => {
+export const deleteFile = async (fileName) => {
+	
 	try{
 		
-		const url = await uploadFile(file,"Resumes")
-		return url;
+		await bucket.file(fileName).delete()
 		
 	}catch(error){
-		throw new HttpException(400, "Could not upload resume.")
+		
+		throw new HttpException(400, "Could not delete files")
 	}
+	
 }

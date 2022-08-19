@@ -12,6 +12,8 @@ import applicationRouter from './routes/application.router';
 import errorMiddleware from './middleware/error.middleware.js';
 import multer from './config/multer.config'
 import { uploadProfilePhoto } from './utils/firebaseUtils';
+import Student from './models/student.model';
+import { studentPopulate } from './utils/populateHelpers';
 
 dotenv.config();
 
@@ -41,9 +43,23 @@ app.use(`${path}/companies`, companyRouter);
 app.use(`${path}/postings`, postingRouter);
 app.use(`${path}/applications`, applicationRouter)
 
-app.get('', multer.single('file'),	async (req,res) => {
-	const url = await uploadProfilePhoto(req.file);
-	res.send(url)
+app.get('', multer.fields([
+	{
+		name: 'profilePhoto', maxCount: 1
+  	}, {
+		name: 'resume', maxCount: 1
+  	}
+]),	async (req,res) => {
+	
+	const student = await Student.findOne({ email : "vrajparikh@gmail.com"})
+		.populate(studentPopulate)
+	
+	await student.addResume(req.files.resume[0])
+	await student.addProfilePhoto(req.files.profilePhoto[0])
+	
+	await student.save()
+	
+	res.status(200).json(await Student.populate(student, studentPopulate))
 })
 
 app.use(errorMiddleware)

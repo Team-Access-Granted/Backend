@@ -2,6 +2,7 @@ import { Schema } from "mongoose";
 import StudentBranch from "../enums/studentBranch.enum"
 import Domains from "../enums/domains.enum"
 import User from "./user.model";
+import File from "./file.model";
 
 const StudentSchema = Schema(
 	{
@@ -94,12 +95,14 @@ const StudentSchema = Schema(
 		},
 		
 		resume: {
-			type: String,
-			validate: {
-				validator: (value) => !value || validator.isURL(value),
-				message: "Student Resume Link is invalid."
-			},
+			type: Schema.Types.ObjectId, 
+        	ref: 'File',
 			default: null
+		},
+		
+		score: {
+			type: Number,
+			default: 0
 		},
 		
 		eligibleForApply: {
@@ -123,6 +126,22 @@ StudentSchema.methods = {
 	canApply: function(posting){
 		if(!posting.university) return true;
 		return this.hasUniversity(posting.university)
+	},
+	addResume: async function(file){
+		if(this.resume) { 
+			await this.resume.deleteOne();
+		}
+		
+		const resumeFile = new File();
+		const extension = file.originalname.split('.').pop()
+		
+		await resumeFile.upload(file, `${this.id}.${extension}`, "Resumes");
+		await resumeFile.save()
+		
+		this.resume = resumeFile.id
+	},
+	addScore: function(points){
+		this.score += points
 	}
 	
 }

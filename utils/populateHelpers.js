@@ -1,3 +1,14 @@
+export const userPopulate = [
+	{
+		path: 'resume',
+		select: 'name url'
+	},
+	{
+		path: 'profilePhoto',
+		select: 'name url'
+	}
+]
+
 export const postingPopulate = [
 	{
 		path: 'company',

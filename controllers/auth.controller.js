@@ -6,6 +6,7 @@ import User from '../models/user.model';
 import University from '../models/university.model';
 import { HttpException } from '../exceptions/HttpException';
 import { generateToken } from '../utils/tokenUtils';
+import { userPopulate } from '../utils/populateHelpers';
 
 // @desc      Register as Student
 // @route     POST /api/v1/auth/students/register
@@ -107,6 +108,7 @@ export const loginAsUser = async(req, res, next) => {
 		const { email, password } = req.body;
 		
 		const user = await User.findOne({ email })
+			.populate(userPopulate)
 		
 		if(!user || !user.authenticate(password)) {
 			next( new HttpException('400', 'Invalid Email or Password Entered.'));

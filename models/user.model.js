@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { compareSync, hashSync } from 'bcrypt';
 import validator from 'validator';
+import File from "./file.model";
 
 const saltRounds = Number(process.env.SALT_ROUNDS)
 
@@ -30,9 +31,10 @@ const UserSchema = Schema(
 			default : false
 		},
 		
-		image : {
+		profilePhoto: {
 			type: Schema.Types.ObjectId, 
-			ref: 'Image'
+        	ref: 'File',
+			default: null
 		},
 		
 		phoneNumber: {
@@ -95,6 +97,19 @@ UserSchema.methods = {
 	},
 	isCompanyAdmin: function(){
 		return this.role == 'CompanyAdmin'
+	},
+	addProfilePhoto: async function(file){
+		if(this.profilePhoto) { 
+			await this.profilePhoto.deleteOne();
+		}
+		
+		const profilePhotoFile = new File();
+		const extension = file.originalname.split('.').pop()
+		
+		await profilePhotoFile.upload(file, `${this.id}.${extension}`, "Profile Photos");
+		await profilePhotoFile.save()
+		
+		this.profilePhoto = profilePhotoFile.id
 	}
 }
 
