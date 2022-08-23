@@ -31,3 +31,18 @@ export const applicationPopulate = [
 		select: 'name'
 	}
 ]
+
+export const requestPopulate = [
+	{
+		path: 'author',
+		select: 'name'
+	},
+	{
+		path: 'company',
+		select: 'name'
+	},
+	{
+		path: 'university',
+		select: 'name'
+	}
+]

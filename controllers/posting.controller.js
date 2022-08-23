@@ -53,11 +53,11 @@ export const getPosting = async (req, res, next) => {
 export const createPosting = async (req, res, next) => {
 	try {
 		
-		const Posting =  res.locals.Posting;
+		const company = res.locals.company;
 		
 		const createPostingData = {
 			...req.body,
-			Posting : Posting.id
+			company: company.id
 		}
 
 		const posting = await PostingService.createPosting(createPostingData);

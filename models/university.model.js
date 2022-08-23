@@ -24,7 +24,7 @@ const UniversitySchema = Schema(
 			type: String,
 			required : "University Contact Number is required",
 			validate: {
-				validator: (value) => validator.isMobileNumber(value),
+				validator: (value) => validator.isMobilePhone(value, 'any'),
 				message: "University Contact Number is invalid."
 			}
 		},

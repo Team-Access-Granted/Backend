@@ -1,8 +1,30 @@
 import Company from "../models/company.model"
 import Application from "../models/application.model"
 import Posting from "../models/posting.model"
+import Request from "../models/request.model"
+import University from "../models/university.model"
 import { HttpException } from "../exceptions/HttpException"
 import { applicationPopulate, postingPopulate } from "../utils/populateHelpers";
+import { getDocuments } from "./modelResults"
+
+export async function getUniversity(req, res, next) {
+	
+	const universityId = req.params.universityId || req.body.university;
+
+	if (!universityId) {
+		next(new HttpException(404, "University Id is not specified."))
+	}
+
+	let university = await University.findById(universityId)
+
+	if (!university) {
+		next(new HttpException(400, "No such university exists."))
+	} else {
+		res.locals.university = university
+		next()
+	}
+	
+}
 
 export async function getCompany(req, res, next) {
 	
@@ -63,4 +85,76 @@ export async function getPosting(req, res, next) {
 		next()
 
 	}
+}
+
+export const getRequest = async (req, res, next) => {
+	
+	const requestId = req.params.requestId || req.body.request;
+	
+	if (!requestId) {
+		next(new HttpException(404, "RequestId was not specified."))
+	}
+
+	let request = await Request.findById(requestId)
+		.populate(requestPopulate)
+
+	if (!request) {
+		next(new HttpException(400, "No such Request exists."))
+	} else {
+
+		res.locals.request = request
+		next()
+
+	}
+	
+}
+
+export const getRequestRecipient = async (req, res, next) => {
+	
+	const universityId = req.body.university; 
+	const companyId = req.body.company;
+	
+	if(universityId){
+		
+		let university = await University.findById(universityId)
+
+		if (!university) {
+			next(new HttpException(400, "No such university exists."))
+		} else {
+			res.locals.university = university
+			next()
+		}
+			
+	}else if(companyId){
+		
+		let company = await Company.findById(companyId)
+
+		if (!company) {
+			next(new HttpException(400, "No such company exists."))
+		} else {
+			res.locals.company = company
+			next()
+		}
+		
+	}else{
+		next(new HttpException(400, "No recipient for request selected."))
+	}
+	
+}
+
+export const getRecommendedPostings = (req, res, next) => {
+
+	let { branch, preferredDomains } = req.user;
+
+	let filter = {}
+	
+	if(branch){
+		filter['preferredBranches'] = { '$elemMatch' : branch }
+	}
+	
+	if(preferredDomains.length > 0){
+		filter['preferredDomains'] = { '$elemMatch' : { '$in' : preferredDomains }}
+	}
+	
+	return getDocuments(Posting, postingPopulate, filter);
 }

@@ -85,3 +85,53 @@ export const applicationUpdatePermissions = (req, res, next) => {
 	}
 	
 }
+
+export const requestCreatePermissions = (req, res) => {
+	
+	const user = req.user;
+		
+	if(user.isStudent() || !user.isSuperAdmin()){
+		next(new HttpException(401, "Incorrect Permissions."))
+	}else{
+		next()
+	}
+	
+}
+
+export const requestAccessPermissions = (req, res) => {
+	
+	const user = req.user;
+		
+	if(user.isStudent() || !user.isSuperAdmin()){
+		next(new HttpException(401, "Incorrect Permissions."))
+	}else{
+		next()
+	}
+	
+}
+
+export const requestAcceptPermissions = (req, res) => {
+	
+	const request = res.locals.request
+	const user = req.user;
+		
+	if(request.canAccept(user)){
+		next(new HttpException(401, "Incorrect Permissions."))
+	}else{
+		next()
+	}
+	
+}
+
+export const requestUpdatePermissions = (req, res) => {
+	
+	const request = res.locals.request;
+	const user = req.user;
+	
+	if(request.hasAuthor(user)){
+		next()
+	}else{
+		next(new HttpException(401, "Incorrect Permissions."))
+	}
+	
+}

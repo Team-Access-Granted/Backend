@@ -51,15 +51,17 @@ app.get('', multer.fields([
   	}
 ]),	async (req,res) => {
 	
-	const student = await Student.findOne({ email : "vrajparikh@gmail.com"})
-		.populate(studentPopulate)
+	// const student = await Student.findOne({ email : "vrajparikh@gmail.com"})
+	// 	.populate(studentPopulate)
 	
-	await student.addResume(req.files.resume[0])
-	await student.addProfilePhoto(req.files.profilePhoto[0])
+	// await student.addResume(req.files.resume[0])
+	// await student.addProfilePhoto(req.files.profilePhoto[0])
 	
-	await student.save()
+	// await student.save()
 	
-	res.status(200).json(await Student.populate(student, studentPopulate))
+	//res.status(200).json(await Student.populate(student, studentPopulate))
+	
+	res.send("Hello World")
 })
 
 app.use(errorMiddleware)
