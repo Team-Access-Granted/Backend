@@ -4,7 +4,7 @@ import * as UniversityController from '../controllers/university.controller';
 const router = Router();
 
 router.route('')
-	.post('',
+	.post(
 		UniversityController.createUniversity
 	)
 
