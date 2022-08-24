@@ -58,7 +58,7 @@ const UniversitySchema = Schema(
 UniversitySchema.methods = {
 	
 	isValidStudentEmail: function(email){
-		return email.endsWith(this.emailDomain);	
+		return !this.emailDomain || email.endsWith(this.emailDomain);	
 	}
 	
 }

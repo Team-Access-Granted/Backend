@@ -10,7 +10,7 @@ const StudentSchema = Schema(
 		university: {
 			type: Schema.Types.ObjectId, 
         	ref: 'University',
-			default: null
+			required: "University must be specified."
 		},
 		
 		branch: {

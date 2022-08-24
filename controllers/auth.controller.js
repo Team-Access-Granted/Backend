@@ -2,6 +2,8 @@ import AdminType from '../enums/adminType.enum';
 import * as StudentService from '../services/student.service'
 import * as CompanyService from '../services/company.service'
 import * as CompanyAdminService from '../services/companyAdmin.service'
+import * as UniversityService from '../services/university.service'
+import { createUniversityAdmin } from '../services/universityAdmin.service'
 import User from '../models/user.model';
 import University from '../models/university.model';
 import { HttpException } from '../exceptions/HttpException';
@@ -16,6 +18,7 @@ import { userPopulate } from '../utils/populateHelpers';
 //     "password": "hello123",
 //     "email" : "vrajparikh29@gmail.com",
 //     "phoneNumber" : "+919998822348",
+//     "university" : ":universityId"
 // }
 
 export const registerAsStudent = async (req, res, next) => {
@@ -28,14 +31,11 @@ export const registerAsStudent = async (req, res, next) => {
 		
 		const user = await User.findOne({ email : createStudentData.email });
 		if (user) return next(new HttpException(400,"User already registered."));
+		if (!createStudentData.university) return next(new HttpException(400,"University must be specefied."));
 		
-		if(createStudentData.university){
-			
-			const university = await University.findById(createStudentData.university)
-			if(!university) return next(new HttpException(400,"No such university exists."));
-			if(!university.isValidStudentEmail(createStudentData.email)) return next(new HttpException(400,"Invalid email address for selected university."));
-		
-		}
+		const university = await University.findById(createStudentData.university)
+		if(!university) return next(new HttpException(400,"No such university exists."));
+		if(!university.isValidStudentEmail(createStudentData.email)) return next(new HttpException(400,"Invalid email address for selected university."));
 		
 		const student = await StudentService.createStudent(createStudentData);
 		
@@ -98,8 +98,60 @@ export const registerAsCompanyAdmin = async(req, res, next) => {
 	}
 }
 
+// @desc      Register as University
+// @route     POST /api/v1/auth/universities/register
+
+// {
+//     "name" : "Vraj Parikh",
+//     "password": "hello123",
+//     "email" : "vrajparikh29@gmail.com",
+//     "phoneNumber" : "+919998822348",
+//     "university" : {
+//         "name" : "Company 1",
+//         "email" : "vrajparikh29@gmail.com",
+//         "website": "www.google.com",
+//         "phoneNumber" : "+919998822348",
+//         "address" : "address"
+//     }
+// }
+
+export const registerAsUniversityAdmin = async (req, res, next) => {
+	
+	let university = null;
+	
+	try{
+		
+		const { university : createUniversityData, ...createUniversityAdminData } = req.body
+		
+		university = await UniversityService.createUniversity(createUniversityData);
+		
+		const universityAdmin = await createUniversityAdmin({
+			...createUniversityAdminData,
+			type: AdminType.SUPER_ADMIN,
+			university: university.id
+		})
+		
+		return res.status(201).json({
+			error: false,
+			data: university,
+			message: "Successfully created a university."
+		})
+		
+	}catch(err){
+		
+		if(university) await UniversityService.deleteUniversity(university)
+		next(err)
+		
+	}
+	
+}
 // @desc      Login
 // @route     POST /api/v1/auth/login
+
+//	{
+//     "password": "hello123",
+//     "email" : "vrajparikh29@gmail.com",
+//	}
 
 export const loginAsUser = async(req, res, next) => {
 	
@@ -111,7 +163,7 @@ export const loginAsUser = async(req, res, next) => {
 			.populate(userPopulate)
 		
 		if(!user || !user.authenticate(password)) {
-			next( new HttpException('400', 'Invalid Email or Password Entered.'));
+			throw new HttpException('400', 'Invalid Email or Password Entered.');
 		}
 		
 		return res.status(201).json({

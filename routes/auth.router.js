@@ -18,7 +18,7 @@ router.post('/login',
 
 // router.route('/user')
 //     .get(
-//         authenticate('user', {session : false}),
+//         passport.authenticate('user', {session : false}),
 //         getUser
 //     )
 //     .patch(

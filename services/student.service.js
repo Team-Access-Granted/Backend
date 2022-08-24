@@ -26,7 +26,14 @@ export const createStudent = async ( createStudentData ) => {
 export const updateStudent = async ( student, updateStudentData ) => {
 	try {
 
-		Object.assign(student, getUpdateFields(updateStudentData));
+		Object.assign(student, getUpdateFields({
+			...updateStudentData,
+			resume: null,
+			profilePhoto: null
+		}));
+		
+		if(updateStudentData.resume) await student.addResume(updateStudentData.resume)
+		if(updateStudentData.profilePhoto) await student.addProfilePhoto(updateStudentData.profilePhoto)
 		
 		await student.save()
 
@@ -42,7 +49,7 @@ export const updateStudent = async ( student, updateStudentData ) => {
 
 export const deleteStudent = async ( student ) => {
 	try {
-
+		
 		await student.deleteOne();
 		
 		return student;

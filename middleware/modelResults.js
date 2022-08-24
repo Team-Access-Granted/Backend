@@ -1,5 +1,19 @@
 import getError from '../utils/dbErrorHandler'
 
+// export const evaluateQuery = (query) => {
+	
+// 	let filter = {}
+	
+// 	Object.entries(([key, value]) => {
+		
+// 		const 
+		
+// 	})
+	
+// 	return filter;
+	
+// }
+
 export function getDocumentbyId(model, paramsField = "", populate = null, filter = {}) {
 	return async (req, res, next) => {
 		try {

@@ -2,7 +2,7 @@ import { Router } from 'express'
 import passport from '../config/passport.config'
 import { companyUpdatePermissions, postingUpdatePermissions } from '../middleware/permission.middleware'
 import { getCompany } from '../middleware/resource.middleware'
-import { updateCompany, deleteCompany, getCompanies } from '../controllers/company.controller'
+import * as CompanyController from '../controllers/company.controller'
 import { createPosting } from '../controllers/posting.controller'
 import { getDocumentbyId, getDocuments } from '../middleware/modelResults'
 import Company from '../models/company.model'
@@ -14,7 +14,7 @@ router.route("/")
 		getDocuments(
 			Company
 		),
-		getCompanies
+		CompanyController.getCompanies
 	)
 
 router.route("/:companyId")
@@ -22,19 +22,20 @@ router.route("/:companyId")
 		getDocumentbyId(
 			Company,
 			"companyId"
-		)
+		),
+		CompanyController.getCompany
 	)
 	.patch(
 		passport.authenticate('company-admin', { session: false }),
 		getCompany,
 		companyUpdatePermissions,
-		updateCompany
+		CompanyController.updateCompany
     )
 	.delete(
 		passport.authenticate('company-admin', { session: false }),
 		getCompany,
 		companyUpdatePermissions,
-		deleteCompany
+		CompanyController.deleteCompany
     )
 
 
