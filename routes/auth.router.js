@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerAsStudent, registerAsCompanyAdmin, loginAsUser } from '../controllers/auth.controller';
+import { registerAsStudent, registerAsCompanyAdmin, loginAsUser, registerAsUniversityAdmin } from '../controllers/auth.controller';
 import passport from '../config/passport.config';
 
 const router = Router();
@@ -10,6 +10,10 @@ router.post('/students/register',
 
 router.post('/companies/register',
     registerAsCompanyAdmin
+)
+
+router.post('/universities/register',
+	registerAsUniversityAdmin
 )
 
 router.post('/login',

@@ -104,14 +104,15 @@ export const registerAsCompanyAdmin = async(req, res, next) => {
 // {
 //     "name" : "Vraj Parikh",
 //     "password": "hello123",
-//     "email" : "vrajparikh29@gmail.com",
+//     "email" : "vrajparikh9@gmail.com",
 //     "phoneNumber" : "+919998822348",
 //     "university" : {
-//         "name" : "Company 1",
+//         "name" : "University 1",
 //         "email" : "vrajparikh29@gmail.com",
 //         "website": "www.google.com",
 //         "phoneNumber" : "+919998822348",
-//         "address" : "address"
+//         "address" : "address",
+//         "emailDomain" : "ddu.edu.org",
 //     }
 // }
 
