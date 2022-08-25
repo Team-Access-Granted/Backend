@@ -28,8 +28,8 @@ export async function getUniversity(req, res, next) {
 
 export async function getCompany(req, res, next) {
 	
-	const companyId = req.params.companyId || req.body.company;
-
+	const companyId = req.params.companyId || req.body.company || req.user.company.id;
+	
 	if (!companyId) {
 		next(new HttpException(404, "Company Id is not specified."))
 	}

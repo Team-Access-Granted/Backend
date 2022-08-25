@@ -49,7 +49,8 @@ const UserSchema = Schema(
 	},
 	{
 		timestamps: true,
-		discriminatorKey: 'role'
+		discriminatorKey: 'role',
+		strictPopulate: false
 	}
 );
 

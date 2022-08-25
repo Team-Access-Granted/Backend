@@ -6,6 +6,7 @@ import Student from '../models/student.model';
 import UniversityAdmin from '../models/universityAdmin.model';
 
 import dotenv from 'dotenv'
+import { userPopulate } from '../utils/populateHelpers';
 dotenv.config()
 
 const jwtSecret = process.env.TOKEN_SECRET_KEY
@@ -21,7 +22,8 @@ passport.use(
         try{
             
 			let user = await User.findOne({email : jwt_payload.id})
-           	 	.select('-hashed_password');
+           	 	.select('-hashed_password')
+				.populate(userPopulate);
 				
 			if(user){
 				done(null,user)
@@ -41,7 +43,8 @@ passport.use(
         try{
             
 			let student = await Student.findOne({email : jwt_payload.id})
-           	 	.select('-hashed_password');
+           	 	.select('-hashed_password')
+				.populate(userPopulate);
 				
 			if(student){
 				done(null,student)
@@ -62,6 +65,7 @@ passport.use(
 	
             let universityAdmin = await UniversityAdmin.findOne({email : jwt_payload.id})
 				.select('-hashed_password')
+				.populate(userPopulate)
 			
             if(universityAdmin){
 				done(null, universityAdmin)
@@ -83,6 +87,7 @@ passport.use(
             
 			let companyAdmin = await CompanyAdmin.findOne({email : jwt_payload.id})
            	 	.select('-hashed_password')
+				.populate(userPopulate)
            
 			if(companyAdmin){
 				done(null, companyAdmin)
@@ -103,6 +108,7 @@ passport.use(
 	
             let universityAdmin = await UniversityAdmin.findOne({email : jwt_payload.id})
 				.select('-hashed_password')
+				.populate(userPopulate)
 			
             if(universityAdmin && universityAdmin.isSuperAdmin()){
 				done(null, universityAdmin)
@@ -124,6 +130,7 @@ passport.use(
 			
 			let companyAdmin = await CompanyAdmin.findOne({email : jwt_payload.id})
            	 	.select('-hashed_password')
+				.populate(userPopulate)
 				
 			if(companyAdmin && companyAdmin.isSuperAdmin()){
 				done(null, companyAdmin)

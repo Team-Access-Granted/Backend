@@ -6,6 +6,14 @@ export const userPopulate = [
 	{
 		path: 'profilePhoto',
 		select: 'name url'
+	},
+	{
+		path: 'company',
+		select: 'name'
+	},
+	{
+		path: 'university',
+		select: 'name'
 	}
 ]
 

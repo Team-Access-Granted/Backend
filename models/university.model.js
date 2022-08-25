@@ -47,6 +47,16 @@ const UniversitySchema = Schema(
 		emailDomain: {
 			type: String,
 			required: "University Domain is required."
+		},
+		
+		institutes: {
+			type: String,
+			// required : "University Institutes is required",
+			// validate: {
+			// 	validator: (value) => Array.isArray(value) && value.length > 1,
+			// 	message: "University Insitutes must not be 0."
+			// }
+			default: []
 		}
 		
 	},

@@ -15,10 +15,12 @@ import { userPopulate } from '../utils/populateHelpers';
 
 // {
 //     "name" : "Vraj Parikh",
-//     "password": "hello123",
-//     "email" : "vrajparikh29@gmail.com",
+//     "password": "qwerty@123",
+//     "email" : "content.tejas@edu.in",
 //     "phoneNumber" : "+919998822348",
-//     "university" : ":universityId"
+//     "university" : "6304ca459364d3f277e15db9",
+//     "branch" : "CE",
+//     "rollNumber": "19CE088"
 // }
 
 export const registerAsStudent = async (req, res, next) => {
@@ -31,7 +33,7 @@ export const registerAsStudent = async (req, res, next) => {
 		
 		const user = await User.findOne({ email : createStudentData.email });
 		if (user) return next(new HttpException(400,"User already registered."));
-		if (!createStudentData.university) return next(new HttpException(400,"University must be specefied."));
+		if (!createStudentData.university) return next(new HttpException(400,"University must be specified."));
 		
 		const university = await University.findById(createStudentData.university)
 		if(!university) return next(new HttpException(400,"No such university exists."));

@@ -13,7 +13,6 @@ export const companyUpdatePermissions = (req, res, next) => {
 	
 }
 
-
 export const postingAccessPermissions = (req, res, next) => {
 	
 	const user = req.user

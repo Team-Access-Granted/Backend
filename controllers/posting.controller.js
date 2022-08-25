@@ -53,7 +53,7 @@ export const getPosting = async (req, res, next) => {
 export const createPosting = async (req, res, next) => {
 	try {
 		
-		const company = res.locals.company;
+		const company = req.user.company;
 		
 		const createPostingData = {
 			...req.body,

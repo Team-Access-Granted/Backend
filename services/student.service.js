@@ -17,6 +17,8 @@ export const createStudent = async ( createStudentData ) => {
 
 	} catch (error) {
 		
+		console.log(error)
+		
 		let errMsg = getError(error);
 		throw new HttpException( 400, errMsg.length > 0 ? errMsg : "Could not create Student.");
 		

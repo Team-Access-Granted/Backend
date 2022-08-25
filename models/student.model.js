@@ -13,19 +13,24 @@ const StudentSchema = Schema(
 			required: "University must be specified."
 		},
 		
+		institute: {
+			type: String,
+			default: null
+		},
+		
 		branch: {
 			type: String,
 			enum: {
 				values: [...StudentBranch, null],
 				message: '{VALUE} is not supported for Branch.'
 			},
-			default: null
+			default: 'Student Branch is required.'
 		},
 	
 		rollNumber: {
 			type: String,
 			trim: true,
-			default: null
+			default: 'Student Roll Number is required.'
 		},
 		
 		ssc: {
