@@ -53,9 +53,9 @@ export const createRequest = async (req, res, next) => {
 		}
 
 		if(university){
-			createRequestData.university = university
+			createRequestData.university = university.id
 		}else{
-			createRequestData.company = company
+			createRequestData.company = company.id
 		}
 		
 		const request = await RequestService.createRequest(createRequestData);

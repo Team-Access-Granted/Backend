@@ -54,3 +54,14 @@ export const requestPopulate = [
 		select: 'name'
 	}
 ]
+
+export const reviewPopulate = [
+	{
+		path: 'author',
+		select: 'name'
+	},
+	{
+		path: 'company',
+		select: 'name'
+	}
+]

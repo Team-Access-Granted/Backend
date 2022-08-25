@@ -42,13 +42,33 @@ const CompanySchema = Schema(
 				validator: (value) => validator.isURL(value),
 				message: "Company Website is invalid."
 			}
-		}	
+		},
+		
+		rating: {
+			count: {
+				type: Number,
+				default: 0
+			},
+			avgRating: {
+				type: Number,
+				default: 0
+			}
+		}
 		
 	},
 	{
 		timestamps: true
 	}
 )
+
+CompanySchema.methods = {
+	
+	addRating: function (rating){
+		this.rating.avgRating = ((this.rating.avgRating*this.rating.count) + rating) / (this.rating.count+1);
+		this.rating.count++;
+	}
+	
+}
 
 const Company = model("Company", CompanySchema);
 

@@ -51,6 +51,10 @@ export const createApplication = async (req, res, next) => {
 
 		const application = await ApplicationService.createApplication(createApplicationData);
 		
+		student.addScore(10)
+		
+		await student.save()
+		
 		return res.status(201).json({
 			error: false,
 			data: application,

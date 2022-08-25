@@ -3,6 +3,7 @@ import StudentBranch from "../enums/studentBranch.enum"
 import Domains from "../enums/domains.enum"
 import User from "./user.model";
 import File from "./file.model";
+import { Experience } from "../enums/experience.enum";
 
 const StudentSchema = Schema(
 	{
@@ -18,13 +19,9 @@ const StudentSchema = Schema(
 			default: null
 		},
 		
-		branch: {
-			type: String,
-			enum: {
-				values: [...StudentBranch, null],
-				message: '{VALUE} is not supported for Branch.'
-			},
-			default: 'Student Branch is required.'
+		degrees: {
+			type: [String],
+			default: []
 		},
 	
 		rollNumber: {
@@ -47,6 +44,13 @@ const StudentSchema = Schema(
 			default: 0
 		},
 		
+		diploma: {
+			type: Number,
+			min: [0, "HSC can not be negative."],
+			max: [100, "HSC must be valid."],
+			default: null
+		},
+		
 		cgpa: {
 			type: Number,
 			min: [0, "CGPA can not be negative."],
@@ -66,12 +70,6 @@ const StudentSchema = Schema(
 				trim: true
 			}
 		],
-		
-		location: {
-			type: String,
-			trim: true,
-			default: ""
-		},
 		
 		profileLinks: {
 			type: [
@@ -103,6 +101,52 @@ const StudentSchema = Schema(
 			type: Schema.Types.ObjectId, 
         	ref: 'File',
 			default: null
+		},
+		
+		openToRemoteWork: {
+			type: Boolean,
+			default: false
+		},
+		
+		openToServiceAgreement: {
+			type: Boolean,
+			default: false
+		},
+		
+		lookingForInternships: {
+			type: Boolean,
+			default: false
+		},
+		
+		location: {
+			city: {
+				type: String,
+				default: null
+			},
+			country: {
+				type: String,
+				default: null
+			}
+		},
+		
+		experience: {
+			type: String,
+			enum: Experience,
+			default: Experience.BEGINNER	
+		},
+		
+		mostRecentJobTitle: {
+			type: String,
+			default: null
+		},
+		
+		expectedSalary:{
+			type: [Number],
+			validate: {
+				validator: (values) => ( Array.isArray(values) && values.length == 2 && values[0] < values[1] ),
+				message: "Expected Salary is invalid."
+			},
+			default: null	
 		},
 		
 		score: {

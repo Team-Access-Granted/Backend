@@ -148,6 +148,7 @@ export const registerAsUniversityAdmin = async (req, res, next) => {
 	}
 	
 }
+
 // @desc      Login
 // @route     POST /api/v1/auth/login
 

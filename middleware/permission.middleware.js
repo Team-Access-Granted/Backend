@@ -59,11 +59,7 @@ export const applicationAccessPermissions = (req, res, next) => {
 	const user = req.user
 	
 	if(user.isStudent()){
-		if(!user.university){
-			req.query.university = { $type: 10 }
-		}else{
-			req.query.university = { $in : [ user.university, null ]}
-		}
+		req.query.student = user.id
 	}
 	
 	next()
@@ -128,6 +124,19 @@ export const requestUpdatePermissions = (req, res) => {
 	const user = req.user;
 	
 	if(request.hasAuthor(user)){
+		next()
+	}else{
+		next(new HttpException(401, "Incorrect Permissions."))
+	}
+	
+}
+
+export const reviewUpdatePermissions = (req, res) => {
+	
+	const review = res.locals.review;
+	const user = req.user;
+	
+	if(review.hasAuthor(user)){
 		next()
 	}else{
 		next(new HttpException(401, "Incorrect Permissions."))

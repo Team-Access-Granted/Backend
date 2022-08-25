@@ -34,7 +34,9 @@ export const updateStudent = async ( student, updateStudentData ) => {
 		
 		if(updateStudentData.resume) await student.addResume(updateStudentData.resume)
 		if(updateStudentData.profilePhoto) await student.addProfilePhoto(updateStudentData.profilePhoto)
-		
+	
+		if(!updateStudentData.isEligible) student.setEligible()
+	
 		await student.save()
 
 		return student;

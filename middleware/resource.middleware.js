@@ -109,6 +109,27 @@ export const getRequest = async (req, res, next) => {
 	
 }
 
+export const getReview = async (req, res, next) => {
+	
+	const reviewId = req.params.reviewId || req.body.review;
+	
+	if (!reviewId) {
+		next(new HttpException(404, "ReviewId was not specified."))
+	}
+
+	let review = await Review.findById(reviewId)
+	
+	if (!review) {
+		next(new HttpException(400, "No such Review exists."))
+	} else {
+
+		res.locals.review = review
+		next()
+
+	}
+	
+}
+
 export const getRequestRecipient = async (req, res, next) => {
 	
 	const universityId = req.body.university; 
@@ -144,12 +165,12 @@ export const getRequestRecipient = async (req, res, next) => {
 
 export const getRecommendedPostings = (req, res, next) => {
 
-	let { branch, preferredDomains } = req.user;
+	let { degree, preferredDomains } = req.user;
 
 	let filter = {}
 	
 	if(branch){
-		filter['preferredBranches'] = { '$elemMatch' : branch }
+		filter['preferredDegrees'] = { '$elemMatch' : degree }
 	}
 	
 	if(preferredDomains.length > 0){

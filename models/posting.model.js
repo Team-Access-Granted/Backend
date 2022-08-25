@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import validator from 'validator';
 import Domains from "../enums/domains.enum";
+import { Experience } from "../enums/experience.enum";
 import { PostingStatus } from "../enums/postingStatus.enum";
 import StudentBranch from "../enums/studentBranch.enum";
 
@@ -32,7 +33,7 @@ const PostingSchema = Schema(
 		},
 		
 		offeredCTC: {
-			type: String,
+			type: Number,
 			trim: true,
 			required: "Posting CTC is required."
 		},
@@ -54,14 +55,26 @@ const PostingSchema = Schema(
 			default: []
 		},
 		
-		remoteWork: {
-			type: Boolean,
-			default: false
-		},
-		
 		internshipPeriod: {
 			type: String,
 			trim: true,
+			default: null
+		},
+		
+		desiredLocation: {
+			city: {
+				type: String,
+				default: null
+			},
+			country: {
+				type: String,
+				default: null
+			}
+		},
+		
+		desiredExperience: {
+			type: String,
+			enum: Experience,
 			default: null
 		},
 		
@@ -74,12 +87,11 @@ const PostingSchema = Schema(
 			}
 		},
 		
-		desiredBranches: {
+		desiredDegrees: {
 			type: [String],
-			enum: StudentBranch,
 			validate: {
 				validator: (value) => (Array.isArray(value) && value.length > 0),
-				message: "Add atleast one desired branch."
+				message: "Add atleast one desired degree."
 			}
 		},
 		
@@ -87,6 +99,11 @@ const PostingSchema = Schema(
 			type: String,
 			trim: true,
 			default: ""
+		},
+		
+		minCGPA: {
+			type: Number,
+			default: 0
 		},
 		
 		customQuestions: {
@@ -117,7 +134,6 @@ PostingSchema.methods = {
 		}
 		return false;
 	}
-	
 }
 
 const Posting = model("Posting", PostingSchema);

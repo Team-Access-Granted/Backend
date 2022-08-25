@@ -1,17 +1,29 @@
 import { Router } from 'express'
 import passport from '../config/passport.config'
-import { applicationUpdatePermissions, postingApplyPermissions, postingUpdatePermissions } from '../middleware/permission.middleware'
+import Application from '../models/application.model'
+import { applicationAccessPermissions, applicationUpdatePermissions, postingApplyPermissions, postingUpdatePermissions } from '../middleware/permission.middleware'
 import { getApplication, getCompany, getPosting } from '../middleware/resource.middleware'
-import { createApplication, updateApplication, deleteApplication } from '../controllers/application.controller'
+import { getDocuments, getDocumentbyId } from '../middleware/modelResults'
+import * as ApplicationController from '../controllers/application.controller'
+import { applicationPopulate } from '../utils/populateHelpers'
 
 const router = Router()
 
 router.route("/")
+	.get(
+		passport.authenticate('user', { session: false }),
+		applicationAccessPermissions,
+		getDocuments(
+			Application, 
+			applicationPopulate
+		),
+		ApplicationController.getApplications
+	)
     .post(
 		passport.authenticate('student', { session: false }),
 		getPosting,
 		postingApplyPermissions,
-        createApplication
+        ApplicationController.createApplication
     )
 
 router.route("/:applicationId")
@@ -19,13 +31,13 @@ router.route("/:applicationId")
 		passport.authenticate('company-member', { session: false }),
 		getApplication,
 		applicationUpdatePermissions,
-		updateApplication
+		ApplicationController.updateApplication
     )
 	.delete(
 		passport.authenticate('student', { session: false }),
 		getApplication,
 		applicationUpdatePermissions,
-		deleteApplication
+		ApplicationController.deleteApplication
     )
 
 export default router

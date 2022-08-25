@@ -9,6 +9,7 @@ import universityRouter from './routes/university.router';
 import companyRouter from './routes/company.router';
 import postingRouter from './routes/posting.router';
 import applicationRouter from './routes/application.router';
+import reviewRouter from './routes/review.router'
 import errorMiddleware from './middleware/error.middleware.js';
 import multer from './config/multer.config'
 import { uploadProfilePhoto } from './utils/firebaseUtils';
@@ -42,6 +43,7 @@ app.use(`${path}/universities`, universityRouter);
 app.use(`${path}/companies`, companyRouter);
 app.use(`${path}/postings`, postingRouter);
 app.use(`${path}/applications`, applicationRouter)
+app.use(`${path}/reviews`, reviewRouter)
 
 app.get('', multer.fields([
 	{
