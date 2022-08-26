@@ -201,7 +201,7 @@ export const getRecommendedPostingsUtil = (user) => {
 		filter.push({ 'title' : new RegExp(mostRecentJobTitle,'i') })
 	}
 	
-	if(expectedSalary){
+	if(expectedSalary && expectedSalary.length > 0){
 		filter.push({ $and : [ { 'offeredCTC' : { $gte : expectedSalary[0] }}, { 'offeredCTC' : { $lte : expectedSalary[1] }} ]})
 	}
 	

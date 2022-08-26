@@ -152,13 +152,13 @@ const StudentSchema = Schema(
 			default: null
 		},
 		
-		expectedSalary:{
+		expectedSalary: {
 			type: [Number],
 			validate: {
-				validator: (values) => ( Array.isArray(values) && values.length == 2 && values[0] < values[1] ),
+				validator: (values) => (Array.isArray(values) && ((values.length == 2 && values[0] < values[1] ) || (values.length == 0))),
 				message: "Expected Salary is invalid."
 			},
-			default: null	
+			default: []	
 		},
 		
 		score: {
