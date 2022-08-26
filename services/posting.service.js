@@ -6,7 +6,7 @@ import { getUpdateFields } from '../utils/requestUtils'
 export const createPosting = async ( createPostingData ) => {
 	
 	try {
-
+	
 		const posting = new Posting({
 			...createPostingData
 		})

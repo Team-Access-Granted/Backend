@@ -74,25 +74,27 @@ const PostingSchema = Schema(
 		
 		desiredExperience: {
 			type: String,
-			enum: Experience,
+			enum: [null, ...Object.values(Experience)],
 			default: null
 		},
 		
 		desiredDomains: {
 			type: [String],
 			enum: Domains,
-			validate: {
-				validator: (value) => (Array.isArray(value) && value.length > 0),
-				message: "Add atleast one desired domain."
-			}
+			// validate: {
+			// 	validator: (value) => (Array.isArray(value) && value.length > 0),
+			// 	message: "Add atleast one desired domain."
+			// }
+			default: []
 		},
 		
 		desiredDegrees: {
 			type: [String],
-			validate: {
-				validator: (value) => (Array.isArray(value) && value.length > 0),
-				message: "Add atleast one desired degree."
-			}
+			// validate: {
+			// 	validator: (value) => (Array.isArray(value) && value.length > 0),
+			// 	message: "Add atleast one desired degree."
+			// }
+			default: []
 		},
 		
 		serviceAgreement: {
@@ -128,12 +130,14 @@ PostingSchema.methods = {
 	markAsCompleted: function(){
 		this.status = PostingStatus.COMPLETED;
 	},
+	
 	isValidApplication: function(application){
-		if(!this.customQuestions || this.customQuestions.length == application?.answers?.length){
+		if(!this.customQuestions || this.customQuestions.length == 0 || this.customQuestions.length == application?.answers?.length){
 			return true;
 		}
 		return false;
 	}
+	
 }
 
 const Posting = model("Posting", PostingSchema);

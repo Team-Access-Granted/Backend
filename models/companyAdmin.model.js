@@ -25,7 +25,12 @@ CompanyAdminSchema.methods = {
 		return this.type == AdminType.SUPER_ADMIN
 	},
 	hasCompany: function(company){
-		return (this.company == company.id.toString() || this.company == company.toString());
+		return (
+			this.company.id == company.id.toString() || 
+			this.company.id == company.toString() ||
+			this.company == company.id.toString() || 
+			this.company == company.toString()
+		);
 	}
 	
 }

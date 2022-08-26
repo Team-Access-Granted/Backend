@@ -4,6 +4,7 @@ import Domains from "../enums/domains.enum"
 import User from "./user.model";
 import File from "./file.model";
 import { Experience } from "../enums/experience.enum";
+import { Background } from "../enums/background.enum";
 
 const StudentSchema = Schema(
 	{
@@ -22,6 +23,12 @@ const StudentSchema = Schema(
 		degrees: {
 			type: [String],
 			default: []
+		},
+		
+		background: {
+			type: String,
+			enum: Object.values(Background),
+			default: Background.STEM
 		},
 	
 		rollNumber: {
@@ -55,6 +62,11 @@ const StudentSchema = Schema(
 			type: Number,
 			min: [0, "CGPA can not be negative."],
 			max: [10, "CGPA must be valid."],
+			default: 0
+		},
+		
+		englishProficiency: {
+			type: Number,
 			default: 0
 		},
 		
@@ -131,7 +143,7 @@ const StudentSchema = Schema(
 		
 		experience: {
 			type: String,
-			enum: Experience,
+			enum: [...Object.values(Experience), null],
 			default: Experience.BEGINNER	
 		},
 		

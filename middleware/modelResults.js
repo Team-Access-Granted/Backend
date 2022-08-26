@@ -66,6 +66,8 @@ export function getDocumentbyId(model, paramsField = "", populate = null, filter
 
 export function getDocuments(model, populate = null, filter = {}, isRestricted) {
 	return async (req, res, next) => {
+		
+		if(res.locals.filter) filter = res.locals.filter
 
 		try {
 

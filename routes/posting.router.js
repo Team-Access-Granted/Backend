@@ -3,7 +3,7 @@ import passport from '../config/passport.config'
 import { getDocuments, getDocumentbyId } from '../middleware/modelResults'
 import * as PostingController from '../controllers/posting.controller'
 import { postingAccessPermissions, postingUpdatePermissions, companyUpdatePermissions } from '../middleware/permission.middleware'
-import { getCompany, getPosting, getRecommendedPostings } from '../middleware/resource.middleware'
+import { getCompany, getPosting, getRecommendedPostings, selectRecommendedPostings } from '../middleware/resource.middleware'
 import Posting from '../models/posting.model'
 import { postingPopulate } from '../utils/populateHelpers'
 
@@ -30,7 +30,11 @@ router.route("/recommendations")
 	.get(
 		passport.authenticate('student', { session: false }),
 		postingAccessPermissions,
-		getRecommendedPostings,
+		selectRecommendedPostings,
+		getDocuments(
+			Posting, 
+			postingPopulate
+		),
 		PostingController.getPostings
 	)
 

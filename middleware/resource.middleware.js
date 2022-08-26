@@ -163,19 +163,55 @@ export const getRequestRecipient = async (req, res, next) => {
 	
 }
 
-export const getRecommendedPostings = (req, res, next) => {
-
-	let { degree, preferredDomains } = req.user;
-
-	let filter = {}
+export const selectRecommendedPostings = (req, res, next) => {
 	
-	if(branch){
-		filter['preferredDegrees'] = { '$elemMatch' : degree }
+	res.locals.filter = getRecommendedPostingsUtil(req.user)
+	next()
+	
+}
+
+
+export const getRecommendedPostingsUtil = (user) => {
+
+	let { degrees, preferredDomains, openToServiceAgreement, openToRemoteWork, lookingForInternships, mostRecentJobTitle, expectedSalary, experience, location } = user;
+
+	let filter = []
+	
+	if(degrees.length > 0){
+		filter.push({ 'preferredDegrees' : { '$elemMatch' : { '$in' : degrees }}})
 	}
 	
 	if(preferredDomains.length > 0){
-		filter['preferredDomains'] = { '$elemMatch' : { '$in' : preferredDomains }}
+		filter.push({ 'preferredDomains' : { '$elemMatch' : { '$in' : preferredDomains }}})
 	}
 	
-	return getDocuments(Posting, postingPopulate, filter);
+	if(openToRemoteWork){
+		filter.push({ 'remoteWork' : true })
+	}
+	
+	if(openToServiceAgreement){
+		filter.push({ 'serviceAgreement' : null })
+	}
+	
+	if(lookingForInternships){
+		filter.push({ 'internshipPeriod' : null })
+	}
+	
+	if(mostRecentJobTitle){
+		filter.push({ 'title' : new RegExp(mostRecentJobTitle,'i') })
+	}
+	
+	if(expectedSalary){
+		filter.push({ $and : [ { 'offeredCTC' : { $gte : expectedSalary[0] }}, { 'offeredCTC' : { $lte : expectedSalary[1] }} ]})
+	}
+	
+	if(experience){
+		filter.push({ 'desiredExperience' : experience })
+	}
+	
+	if(location){
+		filter.push({ 'desiredLocation' : location })
+	}
+	
+	return getDocuments(Posting, postingPopulate, { $or : filter });
 }
